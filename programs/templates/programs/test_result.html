@@ -1,0 +1,21 @@
+{% extends 'programs/base.html' %}
+
+{% block title %}Test result{% endblock %}
+
+{% block content %}
+  <h1>Test result</h1>
+  {% if student_display %}
+    <p>Student: {{ student_display }} {% if student_reg %}({{ student_reg }}){% endif %}</p>
+  {% else %}
+    <p>Participant: {{ submission.participant }}</p>
+  {% endif %}
+  <p>Test: {{ submission.test }}</p>
+  <p>Score: {{ submission.score }}%</p>
+  <h3>Answers</h3>
+  <ul>
+    {% for a in submission.answers.all %}
+      <li>{{ a.question.text }} — selected: {{ a.choice.text }} {% if a.choice.is_correct %}(correct){% endif %}</li>
+    {% endfor %}
+  </ul>
+  <a class="btn btn-link" href="{% url 'programs:test_list' %}">Back to tests</a>
+{% endblock %}

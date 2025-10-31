@@ -1,0 +1,74 @@
+{% extends 'programs/base.html' %}
+
+{% block title %}Get started — Sign up{% endblock %}
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card signup-card shadow-sm">
+            <div class="card-body">
+              <div class="text-center mb-3">
+                <!-- simple inline logo -->
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect x="2" y="6" width="20" height="12" rx="2" fill="#007BFF" />
+                  <path d="M4 8h16M4 12h16" stroke="#fff" stroke-width="0.8" stroke-linecap="round" />
+                </svg>
+              </div>
+              <h4 class="card-title mb-1 text-center fw-bold">Create an account</h4>
+              <p class="text-muted small text-center mb-3">Sign up to access courses, quizzes, and track your progress.</p>
+              <form method="post" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
+                  {{ form.username }}
+                </div>
+                <div class="row">
+                  <div class="col-sm-6 mb-3">
+                    <label class="form-label" for="{{ form.first_name.id_for_label }}">First name</label>
+                    {{ form.first_name }}
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="form-label" for="{{ form.last_name.id_for_label }}">Last name</label>
+                    {{ form.last_name }}
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                  {{ form.email }}
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.password1.id_for_label }}">Password</label>
+                  <div class="input-group">
+                    {{ form.password1 }}
+                    <button type="button" class="btn btn-outline-secondary password-toggle" aria-label="Toggle password visibility">
+                      <!-- eye icon -->
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5c5 0 9 4 9 7s-4 7-9 7-9-4-9-7 4-7 9-7z" stroke="#374151" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="#374151" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.password2.id_for_label }}">Confirm password</label>
+                  <div class="input-group">
+                    {{ form.password2 }}
+                    <button type="button" class="btn btn-outline-secondary password-toggle" aria-label="Toggle password visibility">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5c5 0 9 4 9 7s-4 7-9 7-9-4-9-7 4-7 9-7z" stroke="#374151" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="#374151" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="d-grid mb-2">
+                  <button class="btn signup-btn btn-gradient" type="submit">Sign up</button>
+                </div>
+                <p class="mt-2 text-center small text-muted">Already have an account? <a href="{% url 'programs:login' %}" class="text-muted link-login">Log in</a></p>
+              </form>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

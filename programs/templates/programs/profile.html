@@ -1,0 +1,16 @@
+{% extends 'programs/base.html' %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+  <h1>My Profile</h1>
+  <p><strong>Username:</strong> {{ request.user.username }}</p>
+  <p><strong>Name:</strong> {{ request.user.get_full_name }}</p>
+  <p><strong>Email:</strong> {{ request.user.email }}</p>
+  {% if profile %}
+    <p><strong>Registration No:</strong> {{ profile.reg_no }}</p>
+    <p><strong>Joined:</strong> {{ profile.created_at|date:'SHORT_DATETIME_FORMAT' }}</p>
+  {% else %}
+    <p class="text-muted">No profile found. Contact admin.</p>
+  {% endif %}
+{% endblock %}

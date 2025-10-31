@@ -1,0 +1,56 @@
+{% extends 'programs/base.html' %}
+
+{% block title %}Tests{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Tests</h1>
+  </div>
+
+  <div class="search-inline">
+    <input data-search-input data-target="#testsGrid" class="form-control" placeholder="Search tests by title or course...">
+    <button class="btn btn-outline-secondary" type="button" onclick="document.querySelector('[data-search-input]').value='';document.querySelector('[data-search-input]').dispatchEvent(new Event('input'))">Clear</button>
+  </div>
+
+  {% if tests %}
+    <div id="testsGrid" class="row g-3">
+      {% for t in tests %}
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card card-course h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ t.title }}</h5>
+              <p class="card-text text-muted">{{ t.description|truncatechars:140 }}</p>
+              <div class="course-meta">Course: {{ t.course }}</div>
+            </div>
+            <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
+              <div>
+                <a class="btn btn-sm btn-outline-primary me-1" href="#" data-preview-test data-title="{{ t.title }}" data-description="{{ t.description|escape }}">Preview</a>
+                <!-- take_test view exists -->
+                <a class="btn btn-sm btn-primary me-1" href="{% url 'programs:take_test' t.pk %}">Take Test</a>
+              </div>
+              <div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <!-- Preview modal -->
+    <div class="modal fade" id="testPreviewModal" tabindex="-1" aria-labelledby="testPreviewModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="testPreviewModalLabel">Preview</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <p>No tests yet.</p>
+  {% endif %}
+{% endblock %}

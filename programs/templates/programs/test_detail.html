@@ -1,0 +1,84 @@
+{% extends 'programs/base.html' %}
+
+{% block title %}{{ test.title }}{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+      <h1>{{ test.title }}</h1>
+      <p class="text-muted">{{ test.description }}</p>
+    </div>
+    <div>
+      <a class="btn btn-sm btn-primary" href="{% url 'programs:take_test' test.pk %}">Take Test</a>
+    </div>
+  </div>
+  {% if taking %}
+    <form method="post">
+      {% csrf_token %}
+      {% if participants %}
+        <div class="mb-3">
+          <label for="participant_id" class="form-label">Take test as (choose participant)</label>
+          <select class="form-select" id="participant_id" name="participant_id">
+            {% for p in participants %}
+              <option value="{{ p.pk }}">{{ p.name }}{% if p.organization %} — {{ p.organization }}{% endif %}</option>
+            {% endfor %}
+          </select>
+        </div>
+      {% endif %}
+
+      <div class="mb-3">
+        <strong>Time remaining:</strong> <span id="countdown">{{ test.duration_minutes }}:00</span>
+      </div>
+      {% for q in questions %}
+        <fieldset class="mb-3">
+          <legend>{{ forloop.counter }}. {{ q.text }}</legend>
+          {% for c in q.choices.all %}
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="question_{{ q.pk }}" id="choice_{{ c.pk }}" value="{{ c.pk }}">
+              <label class="form-check-label" for="choice_{{ c.pk }}">{{ c.text }}</label>
+            </div>
+          {% endfor %}
+        </fieldset>
+      {% endfor %}
+      <button class="btn btn-primary" type="submit">Submit Test</button>
+    </form>
+  {% else %}
+    <p>Test not available for taking.</p>
+  {% endif %}
+
+  <script>
+    (function(){
+      // Countdown timer using test.duration_minutes
+      var minutes = parseInt('{{ test.duration_minutes|default:30 }}', 10) || 30;
+      var totalSeconds = minutes * 60;
+      var countdownEl = document.getElementById('countdown');
+      if (!countdownEl) return;
+
+      function formatTime(s){
+        var mm = Math.floor(s/60);
+        var ss = s % 60;
+        return String(mm).padStart(2,'0') + ':' + String(ss).padStart(2,'0');
+      }
+
+      countdownEl.textContent = formatTime(totalSeconds);
+      var interval = setInterval(function(){
+        totalSeconds -= 1;
+        if (totalSeconds <= 0){
+          clearInterval(interval);
+          countdownEl.textContent = '00:00';
+          // Optionally auto-submit the form when time expires
+          var form = document.querySelector('form');
+          if (form){
+            // disable further input
+            var inputs = form.querySelectorAll('input, button, select, textarea');
+            inputs.forEach(function(i){ i.disabled = true; });
+            // for safety do not auto-submit by default; user can still submit if you prefer.
+            // form.submit();
+          }
+          return;
+        }
+        countdownEl.textContent = formatTime(totalSeconds);
+      }, 1000);
+    })();
+  </script>
+{% endblock %}

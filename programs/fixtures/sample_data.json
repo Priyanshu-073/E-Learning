@@ -1,0 +1,31 @@
+[
+  {
+    "model": "programs.instructor",
+    "pk": 1,
+    "fields": {
+      "name": "Dr. Amina Yusuf",
+      "bio": "Expert in remedial teaching strategies and capacity building for educators."
+    }
+  },
+  {
+    "model": "programs.participant",
+    "pk": 1,
+    "fields": {
+      "name": "John Doe",
+      "email": "john@example.org",
+      "organization": "Rural Learning Center"
+    }
+  },
+  {
+    "model": "programs.course",
+    "pk": 1,
+    "fields": {
+      "title": "Innovative Remedial Methods",
+      "description": "Practical techniques to support learners who need additional assistance.",
+      "start_date": "2026-01-12",
+      "duration_weeks": 6,
+      "instructor": 1,
+      "participants": [1]
+    }
+  }
+]

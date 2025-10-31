@@ -1,0 +1,45 @@
+{% extends 'programs/base.html' %}
+
+{% block title %}Courses — Remedial Programs{% endblock %}
+
+{% block content %}
+  <div class="hero">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+      <div>
+        <h1>Courses</h1>
+        <p class="mb-0">Browse available remedial courses and find one that fits your needs.</p>
+      </div>
+    </div>
+    <div class="search-inline">
+      <input data-search-input data-target="#coursesGrid" class="form-control" placeholder="Search courses by title, instructor, description...">
+      <button class="btn btn-outline-secondary" type="button" onclick="document.querySelector('[data-search-input]').value='';document.querySelector('[data-search-input]').dispatchEvent(new Event('input'))">Clear</button>
+    </div>
+
+  {% if courses %}
+    <div id="coursesGrid" class="row g-3">
+      {% for c in courses %}
+        <div class="col-12 col-md-6 col-lg-4">
+          <a href="{% url 'programs:course_detail' c.pk %}" class="text-decoration-none text-reset">
+            <div class="card card-course h-100" data-searchable data-search-text="{{ c.title }} {{ c.description }} {{ c.instructor }}">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h5 class="card-title course-title mb-0">{{ c.title }}</h5>
+                  <small class="course-meta">{{ c.start_date }}</small>
+                </div>
+                <p class="card-text text-muted">{{ c.description|truncatechars:160 }}</p>
+              </div>
+              <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                <small class="course-meta">Instructor: {{ c.instructor }}</small>
+                <div>
+                  <a class="btn btn-sm btn-outline-primary" href="{% url 'programs:course_detail' c.pk %}">View</a>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No courses yet.</p>
+  {% endif %}
+{% endblock %}

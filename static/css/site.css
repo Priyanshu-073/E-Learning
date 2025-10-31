@@ -1,0 +1,195 @@
+/* Custom site styles to improve visual design */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root{
+  --brand: #007BFF; /* primary requested */
+  --muted:#6b7280;
+  --card-border:#e6eefc;
+}
+
+body{
+  font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background: linear-gradient(180deg, #f7fbff 0%, #ffffff 60%);
+  color: #111827;
+}
+
+.navbar-brand{
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.card-course{
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.card-course:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(37,99,235,0.12);
+}
+
+.course-title{
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.course-meta{
+  color: var(--muted);
+}
+
+.hero{
+  padding: 2.4rem 0;
+  margin-bottom: 1.25rem;
+}
+.hero h1{font-size:1.75rem;margin-bottom:.25rem}
+.hero p{color:var(--muted)}
+
+/* Search box styling */
+.search-inline {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.search-inline .form-control{
+  min-width: 260px;
+}
+
+/* small pressed state for buttons */
+.btn.pressed{ transform: translateY(1px) scale(.997); opacity: .95; }
+
+/* Test preview modal customizations */
+.modal-body p{ color: #374151; }
+
+/* no-match placeholder */
+.no-match-placeholder{ padding: 2rem; text-align:center; background: rgba(15,23,42,0.02); border-radius:8px; }
+
+/* Landing hero styles */
+.landing-hero{ background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%); }
+.landing-hero .display-5{ color: #0f172a; font-weight:700; }
+.benefit-list li{ color: #334155; font-weight:500; }
+.hero-screenshot{ height: 200px; overflow:hidden; }
+.signup-card{ border: 1px solid #eef2ff; }
+
+/* Signup specific styles */
+.signup-card{
+  background: #fff;
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+}
+.signup-card .card-body{ padding: 2rem; }
+
+.form-control{ border-radius: 8px; }
+.input-group .btn{ border-top-left-radius: 0; border-bottom-left-radius: 0; }
+
+.btn-gradient{
+  background: linear-gradient(90deg, var(--brand), #0069e0);
+  border: none;
+  color: #fff;
+  padding: .75rem 1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,123,255,0.12);
+  transition: box-shadow .18s ease, transform .06s ease;
+}
+.btn-gradient:hover{ box-shadow: 0 10px 26px rgba(0,123,255,0.18); transform: translateY(-2px); }
+
+.password-toggle{ border-radius: 0 8px 8px 0; }
+.password-field{ padding-right: .5rem; }
+
+.link-login{ color: #6b7280; }
+.link-login:hover{ color: var(--brand); text-decoration: none; }
+
+/* mobile tweaks */
+@media (max-width: 575px){
+  .signup-card .card-body{ padding: 1.25rem; }
+}
+
+/* Login specific styling */
+.login-section{ position: relative; }
+.login-section::before{
+  /* subtle educational illustration using svg data URI - positioned top right */
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 420px;
+  height: 280px;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='280' viewBox='0 0 420 280'><g fill='%23007BFF' fill-opacity='0.06'><rect x='20' y='40' width='80' height='60' rx='6'/><path d='M140 30h80v50h-80z'/><rect x='260' y='80' width='120' height='70' rx='8'/><circle cx='360' cy='50' r='28'/></g></svg>");
+  background-repeat: no-repeat;
+  background-position: right top;
+  opacity: .9;
+}
+
+.login-card{ border-radius: 14px; overflow: hidden; }
+.login-card.fade-in{ animation: fadeIn .36s ease both; }
+
+@keyframes fadeIn{
+  from{ opacity: 0; transform: translateY(8px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+/* Ensure auth inputs inherit form-control when JS enhancement not applied */
+form.enhance-form input[type='text'], form.enhance-form input[type='password'], form.enhance-form input[type='email']{
+  display:block; width:100%; padding:.56rem .75rem; border-radius:8px; border:1px solid #dbeafe; box-shadow:none; margin-top:.25rem;
+}
+
+.login-card .form-label{ font-weight:600; font-size:.9rem; }
+.login-card .text-muted{ color:#6b7280; }
+
+.btn-outline-secondary.password-toggle{ border-radius:0 8px 8px 0; }
+
+/* Center login vertically and ensure responsive alignment */
+.login-section{
+  display: flex;
+  align-items: center; /* vertical center */
+  justify-content: center; /* horizontal center fallback */
+  min-height: calc(100vh - 120px); /* account for navbar/footer height */
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+.login-section .container{ position: relative; }
+.login-card{ margin: 0 auto; }
+
+@media (max-width: 768px){
+  .login-section::before{ display: none; }
+  .login-card .card-body{ padding: 1.25rem; }
+}
+
+/* Instructors grid styles */
+.page-title{ font-size:32px; font-weight:700; }
+.instructor-card{ border-radius:12px; transition: transform .18s ease, box-shadow .18s ease; border:1px solid rgba(2,6,23,0.04); }
+.instructor-card .card-body{ min-height:160px; display:flex; flex-direction:column; }
+.instructor-card:hover{ transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,123,255,0.08); }
+.instructor-avatar{ width:56px; height:56px; border-radius:50%; background:linear-gradient(180deg,#e6f0ff,#d7e9ff); color:var(--brand); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:20px; }
+.instructor-avatar-lg{ width:96px; height:96px; border-radius:12px; background:linear-gradient(180deg,#e6f0ff,#d7e9ff); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:28px; color:var(--brand); }
+.instructor-name{ font-weight:600; font-size:1.05rem; }
+.instructor-sub{ color:#6b7280; }
+.view-profile-btn{ background: linear-gradient(90deg,var(--brand),#0056d2); color:#fff; border-radius:8px; padding:.45rem .75rem; box-shadow: 0 6px 18px rgba(0,123,255,0.08); transition: transform .12s ease, box-shadow .12s ease; }
+.view-profile-btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,123,255,0.14); text-decoration:none; color:#fff; }
+
+/* Responsive grid spacing */
+@media (max-width: 576px){
+  .instructor-card .card-body{ min-height:140px; }
+}
+
+@media (max-width: 767px){
+  .hero-screenshot{ display:none; }
+}
+
+
+.btn-primary{
+  background-color: var(--brand);
+  border-color: var(--brand);
+}
+
+footer{
+  border-top: 1px solid #eef2ff;
+}
+
+/* responsive tweaks */
+@media (min-width: 768px){
+  .hero h1{font-size:2rem}
+}

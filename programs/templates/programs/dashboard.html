@@ -1,0 +1,76 @@
+{% extends 'programs/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h1 class="mb-3">Your Dashboard</h1>
+      <p class="lead">Overview of your progress and quick actions.</p>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card p-3 shadow-sm">
+        <h5>Tests attempted</h5>
+        <div class="display-4">{{ tests_attempted }}</div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card p-3 shadow-sm">
+        <h5>Progress by instructor</h5>
+        <div class="mt-3">
+          {% if instructor_progress %}
+            {% for row in instructor_progress %}
+              <div class="mb-2">
+                <strong>{{ row.instructor__name }}</strong>
+                <div class="progress mt-1" style="height:10px">
+                  <div class="progress-bar" role="progressbar" style="width:{{ row.lectures_attended|add:0|stringformat:'d' }}%" aria-valuenow="{{ row.lectures_attended }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <small class="text-muted">Lectures/Units: {{ row.lectures_attended }}</small>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted">No progress data yet.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card p-3 shadow-sm">
+        <h5>Report a problem</h5>
+        {% if report_submitted %}
+          <div class="alert alert-success">Thanks — your report has been submitted.</div>
+        {% endif %}
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Subject</label>
+            <input name="subject" class="form-control" placeholder="Short summary" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Message</label>
+            <textarea name="message" rows="5" class="form-control" placeholder="Describe the issue" required></textarea>
+          </div>
+          <button class="btn btn-primary">Send report</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3 shadow-sm">
+        <h6>Helpful links</h6>
+        <ul class="list-unstyled small">
+          <li><a href="{% url 'programs:profile' %}">My profile</a></li>
+          <li><a href="{% url 'programs:attempted_tests' %}">Attempted Tests</a></li>
+          <li><a href="/admin/">Admin panel</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

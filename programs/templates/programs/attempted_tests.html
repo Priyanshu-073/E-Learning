@@ -1,0 +1,31 @@
+{% extends 'programs/base.html' %}
+
+{% block title %}Attempted Tests{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Attempted Tests</h1>
+  </div>
+
+  {% if submissions %}
+    <div class="list-group">
+      {% for s in submissions %}
+        <div class="list-group-item d-flex justify-content-between align-items-start">
+          <div>
+            <strong>{{ s.test.title }}</strong>
+            <div class="text-muted">{{ s.test.course }} — {{ s.submitted_at|date:'SHORT_DATETIME_FORMAT' }}</div>
+            <div class="mt-1">Score: {% if s.score is not None %}{{ s.score|floatformat:1 }}%{% else %}—{% endif %}</div>
+            {% if s.participant %}
+              <div class="text-muted">Participant: {{ s.participant }}</div>
+            {% endif %}
+          </div>
+          <div>
+            <a class="btn btn-sm btn-outline-primary me-1" href="{% url 'programs:test_result' s.test.pk s.pk %}">View Result</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>You have no attempted tests yet.</p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends 'programs/base.html' %}
+
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+<!-- Login page styles (self-contained) -->
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root{ --brand:#0d6efd; --bg-1:#f7fbff; --card:#ffffff; }
+
+        /* Make the main wrapper full-width for this page so centering is precise */
+        main.body_wrapper{ padding:0; max-width:100%; }
+
+        .login-viewport{
+          min-height: calc(100vh - 56px); /* account for navbar height */
+          display:flex; align-items:center; justify-content:center;
+          background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 100%);
+          font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+          position:relative; overflow:hidden;
+        }
+
+        .decor-blob{ position:absolute; border-radius:50%; filter:blur(40px); opacity:0.35; pointer-events:none; }
+        .decor-blob.left{ width:360px; height:360px; left:-120px; top:-80px; background:linear-gradient(135deg,#cfe8ff,#ffffff); }
+        .decor-blob.right{ width:320px; height:320px; right:-80px; bottom:-120px; background:linear-gradient(135deg,#e9f0ff,#f9fbff); }
+
+        .login-card{
+          width:100%; max-width:420px; background:var(--card); border-radius:16px; padding:26px; box-shadow:0 12px 30px rgba(13,110,253,0.08); border:1px solid rgba(13,110,253,0.06);
+        }
+
+        .brand-logo{ width:64px; height:64px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; color:#fff; background:linear-gradient(135deg,var(--brand),#6f42c1); }
+
+        h1.login-title{ font-size:1.6rem; margin:6px 0 2px; color:#0f1724; font-weight:700; text-align:center; }
+        p.login-sub{ text-align:center; color:#64748b; font-size:0.95rem; margin-bottom:16px; }
+
+        .form-group{ margin-bottom:14px; position:relative; }
+        .form-group label{ display:block; font-size:0.85rem; color:#475569; margin-bottom:6px; }
+        .form-input{ width:100%; padding:12px 12px 12px 40px; border-radius:10px; border:1px solid #e6eefc; background:#fbfdff; outline:none; font-size:0.95rem; color:#0f1724; box-shadow:inset 0 1px 0 rgba(255,255,255,0.6); }
+        .form-input:focus{ box-shadow:0 6px 18px rgba(13,110,253,0.08); border-color:var(--brand); }
+
+        .input-icon{ position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#7b8da3; }
+
+        .forgot-row{ display:flex; justify-content:flex-end; }
+        .forgot-row a{ font-size:0.85rem; color:var(--brand); text-decoration:none; }
+
+        .btn-primary{ width:100%; background:var(--brand); color:#fff; padding:12px; border-radius:10px; border:none; font-weight:600; cursor:pointer; transition: transform .12s ease, box-shadow .12s ease; }
+        .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 30px rgba(13,110,253,0.12); }
+
+        .aux-row{ text-align:center; margin-top:12px; color:#94a3b8; font-size:0.9rem; }
+        .aux-row a{ color:var(--brand); text-decoration:none; font-weight:600; }
+
+        .decor-illustration{ position:absolute; right:28px; top:8%; width:260px; opacity:0.95; }
+        @media(max-width:880px){ .decor-illustration{ display:none; } .decor-blob.left{ left:-200px; } }
+
+        footer.login-foot{ text-align:center; color:#94a3b8; margin-top:18px; font-size:0.85rem; }
+      </style>
+
+
+      {% comment %} Page markup {% endcomment %}
+      <div class="login-viewport">
+        <div class="decor-blob left"></div>
+        <div class="decor-blob right"></div>
+
+        <div class="login-card" role="main" aria-labelledby="login-heading">
+          <div class="brand-logo" aria-hidden>
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="6" width="18" height="12" rx="2" fill="white" opacity="0.12"></rect>
+              <path d="M6 10h12" stroke="white" stroke-width="1.2" stroke-linecap="round"></path>
+            </svg>
+          </div>
+
+          <h1 id="login-heading" class="login-title">Welcome Back</h1>
+          <p class="login-sub">Login to continue to Remedial Programs.</p>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+              <div style="background:#fff0f0;border:1px solid #ffd6d6;padding:8px;border-radius:8px;color:#b91c1c;margin-bottom:12px">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="form-group">
+              <label for="id_username">Email or Username</label>
+              <span class="input-icon"> <!-- user icon -->
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z" stroke="#475569" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 21v-1c0-2.21-3.58-4-8-4s-8 1.79-8 4v1" stroke="#475569" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              {{ form.username }}
+              {% if form.username.errors %}
+                <div style="color:#b91c1c;font-size:0.85rem;margin-top:6px">{{ form.username.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                <label for="id_password">Password</label>
+                <div class="forgot-row"><a href="/accounts/password_reset/">Forgot Password?</a></div>
+              </div>
+
+              <span class="input-icon" style="left:12px"> <!-- lock icon -->
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="11" width="16" height="10" rx="2" stroke="#475569" stroke-width="1.2"/><path d="M8 11V8a4 4 0 118 0v3" stroke="#475569" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              {{ form.password }}
+              {% if form.password.errors %}
+                <div style="color:#b91c1c;font-size:0.85rem;margin-top:6px">{{ form.password.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div style="margin-top:6px">
+              <button type="submit" class="btn-primary">Login</button>
+            </div>
+          </form>
+
+          <div class="aux-row">Don't have an account? <a href="{% url 'programs:signup' %}">Sign up</a></div>
+          <footer class="login-foot">&copy; 2025 Remedial Programs</footer>
+        </div>
+
+        <!-- decorative illustration (non-functional) -->
+        <div class="decor-illustration" aria-hidden>
+          <svg viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e6f2ff"/></linearGradient>
+            </defs>
+            <rect x="0" y="0" width="400" height="360" rx="20" fill="url(#g1)" opacity="0.9"/>
+            <g transform="translate(18,22)" fill="#cfe8ff" opacity="0.9">
+              <circle cx="60" cy="60" r="32"/>
+              <rect x="120" y="36" width="140" height="12" rx="6"/>
+              <rect x="120" y="64" width="90" height="10" rx="6"/>
+              <rect x="120" y="86" width="70" height="10" rx="6"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- small script: enhance inputs (adds classes to default Django widgets) -->
+      <script>
+        (function(){
+          // Add consistent classes to rendered Django form widgets
+          const username = document.getElementById('id_username');
+          const password = document.getElementById('id_password');
+          if(username) username.className = 'form-input';
+          if(password) password.className = 'form-input';
+
+          // simple password toggle if password toggle exists
+          document.querySelectorAll('.password-toggle').forEach(btn=>{
+            btn.addEventListener('click', ()=>{
+              const p = document.getElementById('id_password');
+              if(!p) return; p.type = p.type === 'password' ? 'text' : 'password';
+            });
+          });
+        })();
+      </script>
+
+      {% endblock %}

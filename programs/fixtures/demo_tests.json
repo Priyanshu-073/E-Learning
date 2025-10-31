@@ -1,0 +1,114 @@
+[
+  {
+    "model": "programs.instructor",
+    "pk": 1,
+    "fields": {
+      "name": "Demo Instructor",
+      "bio": "An example instructor used for demo tests."
+    }
+  },
+  {
+    "model": "programs.participant",
+    "pk": 1,
+    "fields": {
+      "name": "Demo Participant",
+      "email": "demo@example.com",
+      "organization": "Demo Org"
+    }
+  },
+  {
+    "model": "programs.course",
+    "pk": 1,
+    "fields": {
+      "title": "Demo Course: Intro to Testing",
+      "description": "A short demo course to exercise the test UI.",
+      "start_date": "2025-10-01",
+      "duration_weeks": 2,
+      "instructor": 1,
+      "participants": [1]
+    }
+  },
+  {
+    "model": "programs.test",
+    "pk": 1,
+    "fields": {
+      "course": 1,
+      "title": "Demo Quiz 1",
+      "description": "Quick demo quiz with a couple of questions.",
+      "start_date": null,
+      "duration_minutes": 5
+    }
+  },
+  {
+    "model": "programs.question",
+    "pk": 1,
+    "fields": {
+      "test": 1,
+      "text": "What is 2 + 2?"
+    }
+  },
+  {
+    "model": "programs.choice",
+    "pk": 1,
+    "fields": {
+      "question": 1,
+      "text": "3",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "programs.choice",
+    "pk": 2,
+    "fields": {
+      "question": 1,
+      "text": "4",
+      "is_correct": true
+    }
+  },
+  {
+    "model": "programs.choice",
+    "pk": 3,
+    "fields": {
+      "question": 1,
+      "text": "5",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "programs.test",
+    "pk": 2,
+    "fields": {
+      "course": 1,
+      "title": "Demo Quiz 2",
+      "description": "Another demo quiz.",
+      "start_date": null,
+      "duration_minutes": 3
+    }
+  },
+  {
+    "model": "programs.question",
+    "pk": 2,
+    "fields": {
+      "test": 2,
+      "text": "Select the color blue."
+    }
+  },
+  {
+    "model": "programs.choice",
+    "pk": 4,
+    "fields": {
+      "question": 2,
+      "text": "Blue",
+      "is_correct": true
+    }
+  },
+  {
+    "model": "programs.choice",
+    "pk": 5,
+    "fields": {
+      "question": 2,
+      "text": "Red",
+      "is_correct": false
+    }
+  }
+]

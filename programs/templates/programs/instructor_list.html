@@ -3,15 +3,17 @@
 {% block title %}Instructors{% endblock %}
 
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="remedial-classes-bg remedial-classes-wrapper">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="page-title">Instructors</h1>
     <div class="search-inline">
       <input class="form-control" data-search-input data-target="#instructors-grid" placeholder="Search instructors or subjects..." />
     </div>
   </div>
 
-  {% if instructors %}
-    <div id="instructors-grid" class="row g-3">
+      {% if instructors %}
+        <div id="instructors-grid" class="row g-3">
       {% for i in instructors %}
         <div class="col-12 col-sm-6 col-md-4">
           <div class="card instructor-card h-100" data-searchable data-search-text="{{ i.name }} {{ i.bio }}">
@@ -24,17 +26,24 @@
                 </div>
               </div>
               <div class="mt-auto d-flex justify-content-between align-items-center">
-                <a href="#" class="btn view-profile-btn" data-name="{{ i.name|escapejs }}" data-bio="{{ i.bio|escapejs }}">View Profile</a>
+                <div class="btn-group" role="group">
+                  <a href="#" class="btn view-profile-btn" data-name="{{ i.name|escapejs }}" data-bio="{{ i.bio|escapejs }}" data-video="{{ i.video_url|default_if_none:''|escapejs }}">View Profile</a>
+                  {% if i.video_url %}
+                    <a href="{{ i.video_url }}" target="_blank" rel="noopener" class="btn btn-outline-primary">Watch Intro</a>
+                  {% endif %}
+                </div>
                 <small class="text-muted">&nbsp;</small>
               </div>
             </div>
           </div>
         </div>
       {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted">No instructors yet.</p>
+      {% endif %}
     </div>
-  {% else %}
-    <p class="text-muted">No instructors yet.</p>
-  {% endif %}
+  </div>
 
   <!-- Instructor detail modal -->
   <div class="modal fade" id="instructorModal" tabindex="-1" aria-labelledby="instructorModalLabel" aria-hidden="true">
@@ -50,6 +59,11 @@
             <div>
               <h4 id="instructorName"></h4>
               <p id="instructorBio" class="text-muted"></p>
+            </div>
+          </div>
+          <div id="instructorVideoWrapper" class="mt-3" style="display:none;">
+            <div class="ratio ratio-16x9">
+              <iframe id="instructorVideo" src="" title="Instructor video" allowfullscreen></iframe>
             </div>
           </div>
         </div>

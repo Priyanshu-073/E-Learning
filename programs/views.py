@@ -32,8 +32,14 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 
 def index(request):
-    # Landing behavior: send everyone to the signup (landing) page per request.
-    return redirect('programs:signup')
+    # Landing behavior: render a rich interactive homepage showing featured courses and instructors.
+    featured_courses = Course.objects.all()[:6]
+    featured_instructors = Instructor.objects.all()[:6]
+    context = {
+        'featured_courses': featured_courses,
+        'featured_instructors': featured_instructors,
+    }
+    return render(request, 'programs/home.html', context)
 
 class CourseListView(generic.ListView):
     model = Course
@@ -243,7 +249,7 @@ def signup(request):
             user = authenticate(username=username, password=raw_password)
             if user:
                 login(request, user)
-            return redirect('programs:course_list')
+            return redirect('programs:index')
     else:
         form = SignupForm()
     return render(request, 'registration/signup.html', {'form': form})

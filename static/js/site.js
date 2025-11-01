@@ -77,19 +77,40 @@
     var modalTitle = qs('#instructorName', modalEl);
     var modalBio = qs('#instructorBio', modalEl);
     var modalAvatar = qs('.instructor-avatar-lg', modalEl);
+    var videoWrapper = qs('#instructorVideoWrapper', modalEl);
+    var videoFrame = qs('#instructorVideo', modalEl);
     qsa('.view-profile-btn').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         var name = btn.getAttribute('data-name') || '';
         var bio = btn.getAttribute('data-bio') || '';
+        var video = btn.getAttribute('data-video') || '';
         modalTitle.textContent = name;
         modalBio.textContent = bio;
         // set avatar initials
         var initials = (name || '').trim().charAt(0).toUpperCase();
         if (modalAvatar) modalAvatar.textContent = initials;
+        // if a video url is present, try to embed (YouTube/Vimeo simple transforms)
+        if(video && video.length){
+          // naive embed handling: convert youtube watch?v= to embed URL, otherwise set src directly
+          var src = video;
+          if(video.indexOf('youtube.com/watch') !== -1) src = video.replace('watch?v=', 'embed/');
+          if(video.indexOf('youtu.be/') !== -1) src = video.replace('youtu.be/', 'www.youtube.com/embed/');
+          // set iframe src and show wrapper
+          if(videoFrame){ videoFrame.setAttribute('src', src); }
+          if(videoWrapper) videoWrapper.style.display = '';
+        } else {
+          if(videoFrame){ videoFrame.setAttribute('src', ''); }
+          if(videoWrapper) videoWrapper.style.display = 'none';
+        }
         var bsModal = new bootstrap.Modal(modalEl);
         bsModal.show();
       });
+    });
+    // clear video on hide to stop playback
+    modalEl.addEventListener('hidden.bs.modal', function(){
+      if(videoFrame) videoFrame.setAttribute('src','');
+      if(videoWrapper) videoWrapper.style.display = 'none';
     });
   }
 
@@ -160,6 +181,123 @@
     enhanceAuthForms();
     initInstructorView();
     revealFadeUp();
+    initParallax();
+    initThemeToggle();
+    initDashboardCheckboxProgress();
   });
+
+  // Parallax for remedial classes background
+  function initParallax(){
+    var container = qs('.remedial-classes-bg');
+    if(!container) return;
+    // don't run on touch devices or small screens
+    if(('ontouchstart' in window) || window.innerWidth < 768) return;
+    // create a parallax layer if not present
+    if(!qs('.bg-parallax-layer', container)){
+      var layer = document.createElement('div');
+      layer.className = 'bg-parallax-layer';
+      container.insertBefore(layer, container.firstChild);
+    }
+    var layerEl = qs('.bg-parallax-layer', container);
+    var ticking = false;
+    function onScroll(){
+      if(!ticking){
+        window.requestAnimationFrame(function(){
+          var rect = container.getBoundingClientRect();
+          var winH = window.innerHeight;
+          // when in view, move the background slightly
+          var pct = (rect.top) / (winH + rect.height);
+          // clamp and invert a bit for nicer effect
+          var offset = Math.max(-0.25, Math.min(0.25, -pct * 0.2));
+          layerEl.style.transform = 'translateY(' + (offset * 100) + 'px)';
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    // initial position
+    onScroll();
+  }
+
+  // Theme toggle: light / dark with persistence
+  function getStoredTheme(){
+    try{ return localStorage.getItem('theme'); }catch(e){ return null; }
+  }
+  function storeTheme(t){ try{ localStorage.setItem('theme', t); }catch(e){} }
+
+  function applyTheme(t){
+    if(t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    else document.documentElement.removeAttribute('data-theme');
+    // update toggle button icon/aria
+    var btn = document.getElementById('theme-toggle');
+    if(btn){
+      btn.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
+      btn.textContent = t === 'dark' ? '☀️' : '🌙';
+    }
+  }
+
+  function detectPreferredTheme(){
+    var stored = getStoredTheme();
+    if(stored) return stored;
+    if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+    return 'light';
+  }
+
+  function initThemeToggle(){
+    var btn = document.getElementById('theme-toggle');
+    if(!btn) return;
+    var theme = detectPreferredTheme();
+    applyTheme(theme);
+    btn.addEventListener('click', function(){
+      var current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      var next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      storeTheme(next);
+    });
+  }
+
+  // Dashboard: checkbox-driven per-instructor progress bars
+  function initDashboardCheckboxProgress(){
+    var dashboard = qs('.dashboard-container');
+    if(!dashboard) return;
+    // attach listeners to lesson checkboxes
+    qsa('.lesson-checkbox', dashboard).forEach(function(cb){
+      cb.addEventListener('change', function(){
+        var block = cb.closest('.instructor-progress-block');
+        if(!block) return;
+        var boxes = qsa('.lesson-checkbox', block);
+        var total = boxes.length;
+        var checked = boxes.filter(function(b){ return b.checked; }).length;
+        var pct = total ? Math.round((checked/total)*100) : 0;
+        var bar = qs('.progress-bar', block);
+        if(bar){
+          bar.style.width = pct + '%';
+          bar.setAttribute('aria-valuenow', pct);
+        }
+        var label = qs('.lessons-completed-label', block);
+        if(label) label.textContent = checked + ' / ' + total + ' units';
+        // persist simple state per page using localStorage keyed by instructor name (if available)
+        try{
+          var key = 'dashboard_progress_' + (block.getAttribute('data-instructor') || block.querySelector('strong')?.textContent || 'unknown');
+          var state = boxes.map(function(b){ return b.checked ? '1' : '0'; }).join('');
+          localStorage.setItem(key, state);
+        }catch(e){}
+      });
+    });
+    // restore any persisted state
+    qsa('.instructor-progress-block', dashboard).forEach(function(block){
+      try{
+        var key = 'dashboard_progress_' + (block.getAttribute('data-instructor') || block.querySelector('strong')?.textContent || 'unknown');
+        var state = localStorage.getItem(key);
+        if(state){
+          var boxes = qsa('.lesson-checkbox', block);
+          for(var i=0;i<boxes.length && i<state.length;i++) boxes[i].checked = state.charAt(i) === '1';
+          // trigger a change to update UI
+          boxes.forEach(function(b){ b.dispatchEvent(new Event('change')); });
+        }
+      }catch(e){}
+    });
+  }
 
 })();

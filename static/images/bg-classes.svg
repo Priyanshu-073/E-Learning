@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simple decorative SVG background for classes/instructors page -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0%" stop-color="#eef6ff" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+    <pattern id="p" width="160" height="160" patternUnits="userSpaceOnUse">
+      <rect width="160" height="160" fill="rgba(0,0,0,0)" />
+      <path d="M0 160 L160 0 M-20 80 L80 -20 M80 180 L260 20" stroke="#e6f0ff" stroke-width="2" stroke-linecap="round" />
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g)" />
+  <rect width="1200" height="800" fill="url(#p)" opacity="0.7" />
+</svg>

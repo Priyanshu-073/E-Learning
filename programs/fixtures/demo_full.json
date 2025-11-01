@@ -1,0 +1,111 @@
+[
+  {
+    "model": "programs.instructor",
+    "pk": 1,
+    "fields": {
+      "name": "Dr. Amina Yusuf",
+      "bio": "Expert in remedial teaching strategies and capacity building for educators.",
+      "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    }
+  },
+  {
+    "model": "programs.instructor",
+    "pk": 2,
+    "fields": {
+      "name": "Mr. Samuel K.",
+      "bio": "Mathematics specialist focused on numeracy interventions for Grade 3-6 learners.",
+      "video_url": "https://vimeo.com/123456789"
+    }
+  },
+  {
+    "model": "programs.participant",
+    "pk": 1,
+    "fields": {
+      "name": "John Doe",
+      "email": "john@example.org",
+      "organization": "Rural Learning Center",
+      "user": null
+    }
+  },
+  {
+    "model": "programs.course",
+    "pk": 1,
+    "fields": {
+      "title": "Innovative Remedial Methods",
+      "description": "Practical techniques to support learners who need additional assistance.",
+      "start_date": "2025-11-10",
+      "duration_weeks": 6,
+      "instructor": 1,
+      "participants": [1]
+    }
+  },
+  {
+    "model": "programs.course",
+    "pk": 2,
+    "fields": {
+      "title": "Numeracy Foundations",
+      "description": "Hands-on numeracy interventions for primary classrooms.",
+      "start_date": "2025-11-17",
+      "duration_weeks": 4,
+      "instructor": 2,
+      "participants": []
+    }
+  },
+  {
+    "model": "programs.test",
+    "pk": 1,
+    "fields": {
+      "course": 1,
+      "title": "Baseline Assessment",
+      "description": "Short baseline to measure starting competency.",
+      "start_date": "2025-11-12T09:00:00Z",
+      "duration_minutes": 20
+    }
+  },
+  {
+    "model": "programs.question",
+    "pk": 1,
+    "fields": {
+      "test": 1,
+      "text": "What is 2 + 2?"
+    }
+  },
+  {
+    "model": "programs.choice",
+    "pk": 1,
+    "fields": {
+      "question": 1,
+      "text": "3",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "programs.choice",
+    "pk": 2,
+    "fields": {
+      "question": 1,
+      "text": "4",
+      "is_correct": true
+    }
+  },
+  {
+    "model": "programs.studentsubmission",
+    "pk": 1,
+    "fields": {
+      "test": 1,
+      "user": null,
+      "participant": 1,
+      "score": 100.0,
+      "submitted_at": "2025-11-12T09:15:00Z"
+    }
+  },
+  {
+    "model": "programs.submissionanswer",
+    "pk": 1,
+    "fields": {
+      "submission": 1,
+      "question": 1,
+      "choice": 2
+    }
+  }
+]

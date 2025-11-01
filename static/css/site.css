@@ -1,22 +1,47 @@
 /* Custom site styles to improve visual design */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
+/* Theme variables (light by default). Use data-theme="dark" on <html> to switch. */
 :root{
-  --brand: #007BFF; /* primary requested */
-  --muted:#6b7280;
-  --card-border:#e6eefc;
+  --brand: #007BFF; /* primary */
+  --muted: #6b7280;
+  --card-border: #e6eefc;
+  --bg: linear-gradient(180deg, #f7fbff 0%, #ffffff 60%);
+  --text: #111827;
+  --card-bg: #ffffff;
+  --nav-bg: #0d6efd; /* default navbar primary */
+  --nav-text: #ffffff;
 }
+
+/* Dark theme overrides */
+html[data-theme="dark"]{
+  --brand: #4ea8ff;
+  --muted: #94a3b8;
+  --card-border: #1f2a37;
+  --bg: linear-gradient(180deg,#071428 0%, #071428 60%);
+  --text: #e6eefc;
+  --card-bg: #071428;
+  --nav-bg: #05243a;
+  --nav-text: #e6eefc;
+}
+
+html { font-size: 112.5%; /* 1rem = 18px (assuming browser default 16px) for improved scaling */ }
 
 body{
   font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  background: linear-gradient(180deg, #f7fbff 0%, #ffffff 60%);
-  color: #111827;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem; /* equals 18px due to html font-size */
+  line-height: 1.6;
 }
 
 .navbar-brand{
   font-weight: 700;
   letter-spacing: -0.2px;
+  font-size: 1.125rem; /* ~20px (1.125 * 18px base) */
 }
+
+.navbar-nav .nav-link{ font-size: 1rem; /* match body size for nav links */ }
 
 .card-course{
   border: 1px solid var(--card-border);
@@ -159,7 +184,7 @@ form.enhance-form input[type='text'], form.enhance-form input[type='password'], 
 }
 
 /* Instructors grid styles */
-.page-title{ font-size:32px; font-weight:700; }
+.page-title{ font-size:2rem; font-weight:700; }
 .instructor-card{ border-radius:12px; transition: transform .18s ease, box-shadow .18s ease; border:1px solid rgba(2,6,23,0.04); }
 .instructor-card .card-body{ min-height:160px; display:flex; flex-direction:column; }
 .instructor-card:hover{ transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,123,255,0.08); }
@@ -175,6 +200,46 @@ form.enhance-form input[type='text'], form.enhance-form input[type='password'], 
   .instructor-card .card-body{ min-height:140px; }
 }
 
+/* Landing hero styles */
+.hero-landing{ padding: 3.5rem 0; }
+.hero-landing .display-4{ font-weight:700; }
+.hero-landing .carousel img{ height: 340px; object-fit:cover; }
+.hero-landing .carousel{ border-radius:12px; overflow:hidden; }
+
+/* fade-up animation used across landing page */
+.fade-up{ opacity:0; transform: translateY(10px); transition: opacity .45s ease, transform .45s ease; }
+.fade-up.in-view{ opacity:1; transform: translateY(0); }
+
+/* Remedial classes / instructors page background */
+.remedial-classes-bg{
+  /* Prefer a project-local photo if present, otherwise fall back to the decorative SVG */
+  background-image: url('../images/bg-classes-photo.jpg'), url('../images/bg-classes.svg');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover; /* cover ensures it fills area while keeping aspect */
+  padding: 2.5rem 1rem; /* use rem-friendly spacing */
+  /* create a stacking context for the overlay pseudo element */
+  position: relative; overflow: hidden;
+}
+
+/* Slight overlay for content readability */
+.remedial-classes-bg .card, .remedial-classes-bg .page-title, .remedial-classes-bg .search-inline{ position: relative; z-index: 2; }
+.remedial-classes-bg::before{ content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.9) 100%); pointer-events:none; z-index:1; }
+.remedial-classes-wrapper{ position: relative; }
+
+/* Parallax helper: use transform on an inner background layer for smoother animation */
+.remedial-classes-bg .bg-parallax-layer{
+  position: absolute; inset: 0; background-image: inherit; background-repeat: inherit; background-position: center top; background-size: cover; transform: translateY(0); will-change: transform; z-index:0; pointer-events:none; opacity:0.95;
+}
+.remedial-classes-bg .remedial-classes-inner{ position: relative; z-index:2; }
+
+@media (max-width: 767px){
+  /* Disable parallax and heavy backgrounds on small screens for performance */
+  .remedial-classes-bg{ background-attachment: scroll; }
+  .remedial-classes-bg .bg-parallax-layer{ display:none; }
+}
+
+
 @media (max-width: 767px){
   .hero-screenshot{ display:none; }
 }
@@ -186,10 +251,35 @@ form.enhance-form input[type='text'], form.enhance-form input[type='password'], 
 }
 
 footer{
-  border-top: 1px solid #eef2ff;
+  border-top: 1px solid rgba(0,0,0,0.06);
 }
 
 /* responsive tweaks */
+/* Heading scale adjustments to match increased base font-size */
+h1 { font-size: 2.25rem; line-height: 1.15; }
+h2 { font-size: 1.75rem; line-height: 1.2; }
+h3 { font-size: 1.25rem; line-height: 1.25; }
+
 @media (min-width: 768px){
   .hero h1{font-size:2rem}
+}
+
+/* Navbar theming */
+.navbar{ background-color: var(--nav-bg) !important; }
+.navbar .navbar-brand, .navbar .nav-link { color: var(--nav-text) !important; }
+
+/* Theme toggle button */
+#theme-toggle{ background: transparent; border: 0; color: var(--nav-text); font-size: 1rem; padding: .25rem .5rem; }
+#theme-toggle:focus{ outline: 2px solid rgba(255,255,255,0.12); outline-offset: 2px; }
+
+/* Ensure cards pick up themed background */
+.instructor-card, .card { background: var(--card-bg); color: var(--text); border-color: var(--card-border); }
+
+/* Dashboard scoped typography moved from template to external stylesheet to avoid editor linting issues */
+.dashboard-container { font-size: 1.05rem; line-height: 1.65; }
+.dashboard-container h1, .dashboard-container h5, .dashboard-container h6 { line-height: 1.2; }
+.dashboard-container .card { font-size: 1rem; }
+/* Improve spacing for small screens */
+@media (max-width: 576px) {
+  .dashboard-container { font-size: 1.02rem; }
 }

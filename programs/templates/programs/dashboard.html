@@ -3,7 +3,7 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-5 dashboard-container">
   <div class="row mb-4">
     <div class="col-12">
       <h1 class="mb-3">Your Dashboard</h1>
@@ -24,12 +24,23 @@
         <div class="mt-3">
           {% if instructor_progress %}
             {% for row in instructor_progress %}
-              <div class="mb-2">
-                <strong>{{ row.instructor__name }}</strong>
-                <div class="progress mt-1" style="height:10px">
-                  <div class="progress-bar" role="progressbar" style="width:{{ row.lectures_attended|add:0|stringformat:'d' }}%" aria-valuenow="{{ row.lectures_attended }}" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="mb-3 instructor-progress-block" data-instructor="{{ row.instructor__name }}">
+                <div class="d-flex justify-content-between align-items-center">
+                  <strong>{{ row.instructor__name }}</strong>
+                  <small class="text-muted lessons-completed-label">{{ row.lectures_attended }} / 5 units</small>
                 </div>
-                <small class="text-muted">Lectures/Units: {{ row.lectures_attended }}</small>
+                <div class="progress mt-1" style="height:10px">
+                  <div class="progress-bar" role="progressbar" data-width="{{ row.lectures_attended|add:0|stringformat:'d' }}" aria-valuenow="{{ row.lectures_attended }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="mt-2 lesson-checkboxes">
+                  {# Render 5 checkboxes representing units; mark first N checked where N = min(lectures_attended,5) #}
+                  {% for _ in "12345" %}
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input lesson-checkbox" type="checkbox" id="chk-{{ row.instructor__name|cut:" " }}-{{ forloop.counter }}" {% if forloop.counter <= row.lectures_attended %}checked{% endif %} />
+                      <label class="form-check-label small" for="chk-{{ row.instructor__name|cut:" " }}-{{ forloop.counter }}">Unit {{ forloop.counter }}</label>
+                    </div>
+                  {% endfor %}
+                </div>
               </div>
             {% endfor %}
           {% else %}
@@ -72,5 +83,32 @@
       </div>
     </div>
   </div>
+  <!-- small script: set progress-bar widths from data attribute to avoid template CSS parsing issues -->
+  <script>
+    (function(){
+      document.querySelectorAll('.progress-bar[data-width]').forEach(function(el){
+        var v = el.getAttribute('data-width') || '0';
+        v = parseFloat(v) || 0;
+        if(v < 0) v = 0; if(v > 100) v = 100;
+        el.style.width = v + '%';
+        // update nearby lessons-completed-label if present (assume data-width is count of units out of 5)
+        try{
+          var block = el.closest('.instructor-progress-block');
+          if(block){
+            var count = Math.round(v); // original code stored lectures_attended as a count
+            var label = block.querySelector('.lessons-completed-label');
+            if(label){
+              // cap at 5 for display
+              var visibleCount = Math.min(5, count);
+              label.textContent = visibleCount + ' / 5 units';
+              // ensure checkbox states reflect count (first N checked)
+              var boxes = Array.from(block.querySelectorAll('.lesson-checkbox'));
+              boxes.forEach(function(b, idx){ b.checked = idx < visibleCount; });
+            }
+          }
+        }catch(e){}
+      });
+    })();
+  </script>
 </div>
 {% endblock %}

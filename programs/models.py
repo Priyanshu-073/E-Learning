@@ -7,6 +7,8 @@ import uuid
 class Instructor(models.Model):
     name = models.CharField(max_length=200)
     bio = models.TextField(blank=True)
+    # optional link to a short intro/lecture video (YouTube/Vimeo/etc.)
+    video_url = models.URLField(blank=True)
 
     def __str__(self):
         return self.name

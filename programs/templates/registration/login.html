@@ -111,7 +111,7 @@
           </form>
 
           <div class="aux-row">Don't have an account? <a href="{% url 'programs:signup' %}">Sign up</a></div>
-          <footer class="login-foot">&copy; 2025 Remedial Programs</footer>
+          {# Footer copyright removed per user request #}
         </div>
 
         <!-- decorative illustration (non-functional) -->
@@ -151,3 +151,5 @@
       </script>
 
       {% endblock %}
+
+      {% block navbar %}{% endblock %}

@@ -147,7 +147,7 @@ STATIC_URL = 'static/'
 
 # Additional directories to look for static files (placeholders)
 STATICFILES_DIRS = [
-    # BASE_DIR / 'static',
+    BASE_DIR / 'static',
 ]
 
 
@@ -168,4 +168,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # -----------------------------------------------------------------------------
 # After logout, redirect users to the login page. Update if you change login URL.
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+# After login, send users to the homepage (index)
+LOGIN_REDIRECT_URL = '/'
 

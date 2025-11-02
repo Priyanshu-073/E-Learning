@@ -5,16 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Remedial Teaching & Capacity Building{% endblock %}</title>
-    {# Apply stored theme as early as possible to avoid FOUC and ensure CSS variables take effect immediately #}
-    <script>
-      (function(){
-        try{
-          var t = localStorage.getItem('theme');
-          if(t === 'dark') document.documentElement.setAttribute('data-theme','dark');
-          else document.documentElement.removeAttribute('data-theme');
-        }catch(e){}
-      })();
-    </script>
+    {# theme support removed - no client-side theme script #}
   <link rel="icon" href="{% static 'images/favicon.svg' %}" type="image/svg+xml">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
@@ -69,10 +60,7 @@
       </div>
     </nav>
     {% endblock %}
-      {# Floating theme toggle button positioned top-right just under the navbar #}
-      <div class="theme-fab" aria-hidden="false">
-        <button id="theme-toggle" type="button" class="btn btn-sm btn-light" aria-pressed="false" title="Toggle theme">🌙</button>
-      </div>
+      {# theme toggle removed #}
     <main class="container body_wrapper">
       {% block content %}{% endblock %}
     </main>
@@ -81,7 +69,6 @@
         {# Footer copyright removed per user request #}
       </div>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'js/site.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

@@ -3,14 +3,118 @@
 {% block title %}My Profile{% endblock %}
 
 {% block content %}
-  <h1>My Profile</h1>
-  <p><strong>Username:</strong> {{ request.user.username }}</p>
-  <p><strong>Name:</strong> {{ request.user.get_full_name }}</p>
-  <p><strong>Email:</strong> {{ request.user.email }}</p>
-  {% if profile %}
-    <p><strong>Registration No:</strong> {{ profile.reg_no }}</p>
-    <p><strong>Joined:</strong> {{ profile.created_at|date:'SHORT_DATETIME_FORMAT' }}</p>
-  {% else %}
-    <p class="text-muted">No profile found. Contact admin.</p>
-  {% endif %}
+<div class="profile-page py-5">
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <div class="profile-card p-4">
+        <div class="row g-0">
+          <div class="col-md-4 d-flex flex-column align-items-center border-end pe-4">
+            <div class="avatar-placeholder mb-3">
+              {% with name=request.user.get_full_name|default:request.user.username %}
+                <span class="avatar-initial">{{ name|slice:":1"|upper }}</span>
+              {% endwith %}
+            </div>
+            <h5 class="mb-1 text-light">{{ request.user.get_full_name|default:request.user.username }}</h5>
+            <p class="mb-3 text-muted small">@{{ request.user.username }}</p>
+            <div class="w-100 d-grid gap-2">
+              <a href="{% url 'programs:dashboard' %}" class="btn btn-outline-light btn-sm">← Back to Dashboard</a>
+              <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
+            </div>
+          </div>
+          <div class="col-md-8 ps-4">
+            <h3 class="fw-bold text-light">Profile</h3>
+            <div class="profile-details mt-3">
+              <div class="row mb-2">
+                <div class="col-4 text-muted small d-flex align-items-center">
+                  <!-- user icon -->
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+                    <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z" fill="#E0E0E0" opacity=".9"/>
+                    <path d="M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8v1H4v-1z" fill="#E0E0E0" opacity=".06"/>
+                  </svg>
+                  Username
+                </div>
+                <div class="col-8 text-light">{{ request.user.username }}</div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-4 text-muted small d-flex align-items-center">
+                  <!-- mail icon -->
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+                    <path d="M2 6v12h20V6H2zm10 6L4 8h16l-8 4z" fill="#E0E0E0"/>
+                  </svg>
+                  Email
+                </div>
+                <div class="col-8 text-light">{{ request.user.email|default:"—" }}</div>
+              </div>
+              {% if profile %}
+              <div class="row mb-2">
+                <div class="col-4 text-muted small d-flex align-items-center">
+                  <!-- id icon -->
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+                    <path d="M3 5h18v14H3z" fill="#E0E0E0" opacity=".06"/>
+                    <path d="M7 9h10v2H7zM7 13h6v2H7z" fill="#E0E0E0"/>
+                  </svg>
+                  Registration No.
+                </div>
+                <div class="col-8 text-light">{{ profile.reg_no }}</div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-4 text-muted small d-flex align-items-center">
+                  <!-- calendar icon -->
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+                    <path d="M7 10h5v5H7z" fill="#E0E0E0" opacity=".06"/>
+                    <path d="M7 11h10v8H7z" stroke="#E0E0E0" stroke-width="0" fill="#E0E0E0"/>
+                  </svg>
+                  Joined
+                </div>
+                <div class="col-8 text-light">{{ profile.created_at|date:'SHORT_DATETIME_FORMAT' }}</div>
+              </div>
+              {% else %}
+                <div class="card bg-dark border-0 text-center p-3 mt-3" style="background: rgba(255,255,255,0.02);">
+                  <div class="card-body">
+                    <h5 class="card-title text-light">No profile found</h5>
+                    <p class="card-text text-muted">We couldn't find your extended profile yet. You can edit your basic account details or contact the administrator to create your profile.</p>
+                    <div class="d-flex justify-content-center gap-2">
+                      <a href="{% url 'programs:dashboard' %}" class="btn btn-outline-light btn-sm">Go to Dashboard</a>
+                      <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">Create Profile</button>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal (client-side placeholder) -->
+  <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-0">
+          <h5 class="modal-title">Edit Profile</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label class="form-label">Full name</label>
+              <input type="text" class="form-control bg-transparent text-light" value="{{ request.user.get_full_name }}" placeholder="Your full name">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control bg-transparent text-light" value="{{ request.user.email }}" placeholder="you@example.com">
+            </div>
+            <div class="text-muted small">This modal is a front-end placeholder. Implement server-side saving in the profile edit view.</div>
+          </form>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary btn-sm">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 {% endblock %}

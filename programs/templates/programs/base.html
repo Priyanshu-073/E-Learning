@@ -33,7 +33,9 @@
             <li class="nav-item"><a class="nav-link" href="{% url 'programs:course_list' %}">Courses</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'programs:instructor_list' %}">Instructors</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'programs:participant_list' %}">Participants</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'programs:dashboard' %}">Dashboard</a></li>
+            {% if request.user.is_authenticated %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'programs:dashboard' %}">Dashboard</a></li>
+            {% endif %}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="testsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tests</a>
               <ul class="dropdown-menu" aria-labelledby="testsDropdown">
@@ -61,14 +63,16 @@
               <li class="nav-item"><a class="nav-link" href="{% url 'programs:login' %}">Login</a></li>
               <li class="nav-item"><a class="nav-link" href="{% url 'programs:signup' %}">Sign up</a></li>
             {% endif %}
-            <li class="nav-item">
-              <button id="theme-toggle" class="nav-link" aria-pressed="false" title="Toggle theme">🌙</button>
-            </li>
+            {# theme toggle removed per request - keep navbar minimal #}
           </ul>
         </div>
       </div>
     </nav>
     {% endblock %}
+      {# Floating theme toggle button positioned top-right just under the navbar #}
+      <div class="theme-fab" aria-hidden="false">
+        <button id="theme-toggle" type="button" class="btn btn-sm btn-light" aria-pressed="false" title="Toggle theme">🌙</button>
+      </div>
     <main class="container body_wrapper">
       {% block content %}{% endblock %}
     </main>

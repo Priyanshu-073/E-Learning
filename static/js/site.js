@@ -182,8 +182,8 @@
     initInstructorView();
     revealFadeUp();
     initParallax();
-    initThemeToggle();
     initDashboardCheckboxProgress();
+    initThemeToggle();
   });
 
   // Parallax for remedial classes background
@@ -220,18 +220,20 @@
     onScroll();
   }
 
-  // Theme toggle: light / dark with persistence
+  // theme switching removed — site uses default/light variables only
+  // Theme toggle: light / dark with persistence (re-added)
   function getStoredTheme(){
     try{ return localStorage.getItem('theme'); }catch(e){ return null; }
   }
   function storeTheme(t){ try{ localStorage.setItem('theme', t); }catch(e){} }
 
   function applyTheme(t){
-    if(t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
-    else document.documentElement.removeAttribute('data-theme');
-    // update toggle button icon/aria
+    try {
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      else document.documentElement.removeAttribute('data-theme');
+    } catch (e) { console.warn('applyTheme: could not set attribute', e); }
     var btn = document.getElementById('theme-toggle');
-    if(btn){
+    if (btn) {
       btn.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
       btn.textContent = t === 'dark' ? '☀️' : '🌙';
     }
@@ -249,11 +251,13 @@
     if(!btn) return;
     var theme = detectPreferredTheme();
     applyTheme(theme);
+    try{ console.debug('[theme] initThemeToggle: applied theme=', theme, 'stored=', getStoredTheme()); }catch(e){}
     btn.addEventListener('click', function(){
       var current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
       var next = current === 'dark' ? 'light' : 'dark';
       applyTheme(next);
       storeTheme(next);
+      try{ console.debug('[theme] toggled from', current, 'to', next, 'localStorage=', localStorage.getItem('theme')); }catch(e){}
     });
   }
 

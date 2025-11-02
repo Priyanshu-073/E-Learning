@@ -13,17 +13,7 @@
   --nav-text: #ffffff;
 }
 
-/* Dark theme overrides */
-html[data-theme="dark"]{
-  --brand: #4ea8ff;
-  --muted: #94a3b8;
-  --card-border: #1f2a37;
-  --bg: linear-gradient(180deg,#071428 0%, #071428 60%);
-  --text: #e6eefc;
-  --card-bg: #071428;
-  --nav-bg: #05243a;
-  --nav-text: #e6eefc;
-}
+/* Dark theme support removed - site uses default/light variables in :root */
 
 html { font-size: 112.5%; /* 1rem = 18px (assuming browser default 16px) for improved scaling */ }
 
@@ -212,8 +202,9 @@ form.enhance-form input[type='text'], form.enhance-form input[type='password'], 
 
 /* Remedial classes / instructors page background */
 .remedial-classes-bg{
-  /* Prefer a project-local photo if present, otherwise fall back to the decorative SVG */
-  background-image: url('../images/bg-classes-photo.jpg'), url('../images/bg-classes.svg');
+  /* Use the decorative SVG background by default (vector scales nicely). To use a photo,
+     overwrite static/images/bg-classes-photo.jpg or change this URL to your filename. */
+  background-image: url('../images/bg-classes.svg');
   background-repeat: no-repeat;
   background-position: center top;
   background-size: cover; /* cover ensures it fills area while keeping aspect */
@@ -268,9 +259,42 @@ h3 { font-size: 1.25rem; line-height: 1.25; }
 .navbar{ background-color: var(--nav-bg) !important; }
 .navbar .navbar-brand, .navbar .nav-link { color: var(--nav-text) !important; }
 
-/* Theme toggle button */
-#theme-toggle{ background: transparent; border: 0; color: var(--nav-text); font-size: 1rem; padding: .25rem .5rem; }
-#theme-toggle:focus{ outline: 2px solid rgba(255,255,255,0.12); outline-offset: 2px; }
+/* Dark theme overrides (light/dark switching supported via html[data-theme="dark"]) */
+html[data-theme="dark"]{
+  --brand: #4ea8ff;
+  --muted: #94a3b8;
+  --card-border: #1f2a37;
+  --bg: linear-gradient(180deg,#071428 0%, #071428 60%);
+  --text: #e6eefc;
+  --card-bg: #071428;
+  --nav-bg: #05243a;
+  --nav-text: #e6eefc;
+}
+
+/* Floating theme button (top-right, just below navbar) */
+.theme-fab{ position: fixed; top: calc(56px + 8px); right: 20px; z-index: 1100; }
+.theme-fab .btn{ box-shadow: 0 6px 18px rgba(2,6,23,0.06); border-radius: 999px; padding: .45rem .6rem; }
+.theme-fab .btn:focus{ outline: 2px solid rgba(0,123,255,0.18); outline-offset: 2px; }
+
+@media (max-width: 767px){
+  .theme-fab{ top: calc(56px + 6px); right: 12px; }
+}
+
+/* Ensure body background and text color follow the theme variables and transition smoothly */
+html[data-theme="dark"] body{
+  background: var(--bg) !important;
+  color: var(--text) !important;
+  transition: background .22s ease, color .22s ease;
+}
+
+/* Reduce light overlay on remedial background in dark mode so the background appears darker */
+html[data-theme="dark"] .remedial-classes-bg::before{
+  background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+/* Make the floating FAB respect theme colors */
+.theme-fab .btn{ background: rgba(255,255,255,0.92); color: var(--nav-text); }
+html[data-theme="dark"] .theme-fab .btn{ background: rgba(255,255,255,0.06); color: var(--nav-text); }
 
 /* Ensure cards pick up themed background */
 .instructor-card, .card { background: var(--card-bg); color: var(--text); border-color: var(--card-border); }
